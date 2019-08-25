@@ -2,6 +2,12 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const Users = require('../models/users');
+const jwt = require('jsonwebtoken');
+
+// auxiliar functions
+const createUsersToken = (userId) => {
+  return jwt.sign({ id: userId }, 'password_banana', { expiresIn: '1d' });
+};
 
 router.get('/', async (req, res) => {
   try {
@@ -33,7 +39,9 @@ router.post('/create', async (req, res) => {
 
     const newUser = await Users.create({ email, password });
     newUser.password = undefined;
-    return res.send(newUser);
+    
+    return res.send({ newUser, token: createUsersToken(newUser.id) });
+
   } catch (err) {
     return res.send({ error: 'Users is Registered' });
   }
@@ -68,7 +76,7 @@ router.post('/auth', async (req, res) => {
     if (!pass_ok) return res.send({ error: 'Error password invalid' });
 
     userExist.password = undefined;
-    return res.send(userExist);
+    return res.send({ userExist, token: createUsersToken(userExist.id) });
     
   } catch (err) {
     if (err) return res.send({ error: 'Error to connect and select user' });

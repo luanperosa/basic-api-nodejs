@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth');
 
-router.get('/', (req, res) => {
+router.get('/', auth, (req, res) => {
+  console.log(res.locals.auth_data); // information of token with your Id
   console.log('entry of get raiz');
   return res.send({message: 'Get index raiz ok!'})
 })
