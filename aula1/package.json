@@ -11,5 +11,8 @@
     "url": "basic-api-nodejs"
   },
   "author": "Luan Perosa Chitto",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.6"
+  }
 }

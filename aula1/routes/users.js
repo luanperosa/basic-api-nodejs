@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
 const Users = require('../models/users');
 
 router.get('/', (req, res) => {
@@ -33,5 +34,23 @@ router.post('/create', (req, res) => {
   
   //return res.send({message: 'Criado com sucesso'}) 
 })
+
+router.post('/auth', (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) return res.render({ error: 'Users not exist!'});
+
+  Users.findOne({ email: email }, (err, data) => {
+    if(err) return res.send({ error: 'Erros to connect and select user'});
+    if(!data) return res.send({ error: 'User is not exist, no data!'});
+  // becareful not compare laranja with banana
+    bcrypt.compare(password, data.password, (err, same) => { 
+      if (!same) return res.send({ error: 'Error password invalid' });
+
+      data.password = undefined;
+      return res.send(data);
+    });
+  }).select('+password'); // obrigation set the password
+});
 
 module.exports = router;
