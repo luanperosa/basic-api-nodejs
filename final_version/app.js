@@ -2,8 +2,10 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const config = require('./config/config');
 
-const url = 'mongodb://localhost/apis-nodejs';
+const url = config.bdString;
+//const url = 'mongodb://localhost/apis-nodejs';
 const options = { reconnectTries: Number.MAX_VALUE, reconnectIinterval: 500, poolSize: 5, useNewUrlParser: true };
 
 mongoose.connect(url, { useNewUrlParser: true });
@@ -36,14 +38,3 @@ app.use('/users', usersRoute);
 app.listen(3000);
 
 module.exports = app;
-
-// codigo utilizado na primeira video aula
-// app.get('/', (req, res) => {
-//   let objet = req.query;
-//   const { nome, idade} = objet;
-//   return res.send({message: `Tudo ok com o metodo GET. Seu nome é ${nome}, idade ${idade}`})
-// });
-
-// app.post('/', (req, res) => {
-//   return res.send({message: 'Tudo ok com metodo Post'})
-// })
